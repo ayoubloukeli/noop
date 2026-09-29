@@ -149,6 +149,22 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.renderLiquidSky(
     // page; <1 holds the atmosphere so the sky still reads under a full-height "sky behind cards" backdrop).
     settleStrength: Float = 1f,
 ) {
+    // Pastel Studio (light): no dark day-cycle sky. A soft pastel wash (pale green into pale blue)
+    // that dissolves into the light canvas, so the whole screen reads light and airy.
+    if (Palette.isLight) {
+        drawRect(
+            brush = Brush.verticalGradient(
+                colorStops = arrayOf(
+                    0.0f to Color(0xFFE6F1DA),
+                    0.45f to Color(0xFFEDF3F1),
+                    1.0f to settle,
+                ),
+                startY = 0f,
+                endY = size.height,
+            ),
+        )
+        return
+    }
     val s = liquidSkyAt(hour)
     val w = size.width
     val h = size.height

@@ -1472,8 +1472,10 @@ fun TodayScreen(
                         }
                     }
                 }
-                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                    LiquidWordmark()
+                // Pastel Studio: a friendly greeting + bold title in place of the centred wordmark.
+                Column(modifier = Modifier.weight(1f).padding(horizontal = 4.dp)) {
+                    Text(greetingWord(), style = NoopType.subhead, color = Palette.textSecondary)
+                    Text(uiString(R.string.pastel_header_title), style = NoopType.title1, color = Palette.textPrimary)
                 }
                 CustomizeDisc(onClick = { showLayoutEditor = true })
             }

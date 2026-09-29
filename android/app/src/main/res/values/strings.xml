@@ -2534,6 +2534,7 @@
     <string name="today_greeting_morning">Good morning</string>
     <string name="today_greeting_afternoon">Good afternoon</string>
     <string name="today_greeting_evening">Good evening</string>
+    <string name="pastel_header_title">Your day</string>
     <string name="today_calibrating">Calibrating</string>
     <string name="today_source_count_joiner">%1$s · %2$s</string>
     <string name="today_trend_7_days">7-day trend</string>
