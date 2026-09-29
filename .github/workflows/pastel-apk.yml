@@ -5,7 +5,7 @@ name: Build Pastel APK
 on:
   workflow_dispatch:
   push:
-    branches: [pastel-ui]
+    branches: [pastel-ui, main]
 
 permissions:
   contents: write
