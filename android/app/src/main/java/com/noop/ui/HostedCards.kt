@@ -86,7 +86,7 @@ enum class HostedCard(
     TREND_RESTING_HR("trends.restingHr", "Resting heart rate", "Trends", Icons.Filled.Favorite),
     /** Trends tab · "Effort" — the trailing-month Effort trend, displayed on the wearer's chosen
      *  Effort scale exactly as the Trends tab shows it (#268). */
-    TREND_EFFORT("trends.effort", "Effort", "Trends", Icons.Filled.Bolt);
+    TREND_EFFORT("trends.effort", "Strain", "Trends", Icons.Filled.Bolt);
 
     companion object {
         fun fromRaw(raw: String?): HostedCard? = entries.firstOrNull { it.raw == raw }

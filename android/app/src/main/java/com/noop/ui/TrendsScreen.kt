@@ -1089,9 +1089,9 @@ private fun RecoveryHistoryCard(days: List<DailyMetric>, range: TrendsRange) {
         days.takeLast(span).mapNotNull { it.recovery }
     }
     val title = if (range == TrendsRange.All && days.size > 365) {
-        "Charge , all history"
+        "Recovery , all history"
     } else {
-        "Charge , past year"
+        "Recovery , past year"
     }
 
     NoopCard {

@@ -123,7 +123,7 @@ internal object TestCentreLiveReadouts {
                     snapshot.batteryEstimate?.source?.name?.lowercase(Locale.US) ?: "--",
                 )
                 "lastChargeBreakdown" -> LiveReadoutRow(
-                    id, "Last Charge breakdown",
+                    id, "Last Recovery breakdown",
                     TestReadout.lastChargeBreakdown(tail) ?: "no night scored yet",
                 )
                 "lastHrvComputation" -> LiveReadoutRow(

@@ -54,8 +54,8 @@ enum class EffortScale(val raw: String) {
     WHOOP("whoop");
 
     companion object {
-        /** An unset/unknown value resolves to NOOP's native 0–100 axis. */
-        fun fromRaw(raw: String?): EffortScale = entries.firstOrNull { it.raw == raw } ?: HUNDRED
+        /** Pastel build: an unset value resolves to the familiar 0–21 Strain axis. */
+        fun fromRaw(raw: String?): EffortScale = entries.firstOrNull { it.raw == raw } ?: WHOOP
     }
 }
 

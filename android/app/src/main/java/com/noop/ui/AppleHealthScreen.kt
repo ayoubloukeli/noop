@@ -403,7 +403,7 @@ private fun BodySection(data: AppleData, range: AppleRange) {
 
 @Composable
 private fun SleepSection(data: AppleData, range: AppleRange) {
-    ChartSection("Sleep", "Rest", range) {
+    ChartSection("Sleep", "Sleep Performance", range) {
         MetricChartCard(data, range, "asleep_min", "Asleep", Palette.metricPurple) { durationString(it) }
     }
 }

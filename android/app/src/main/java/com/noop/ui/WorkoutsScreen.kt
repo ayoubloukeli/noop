@@ -1847,7 +1847,7 @@ private fun RecoveryTrendChart(
 private fun SessionEffortCard(strain: Double, effortScale: EffortScale) {
     val shown = UnitFormatter.effortValue(strain, effortScale)
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.space8)) {
-        SectionHeader("Effort", overline = "This session")
+        SectionHeader("Strain", overline = "This session")
         NoopCard(tint = Palette.effortColor) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -1859,7 +1859,7 @@ private fun SessionEffortCard(strain: Double, effortScale: EffortScale) {
                         contentDescription = uiString(
                             R.string.l10n_workouts_screen_this_session_s_effort_onedecimal_shown_74eed8be,
                             oneDecimal(shown),
-                            if (effortScale == EffortScale.WHOOP) "0 to 21 strain" else "0 to 100 Effort",
+                            if (effortScale == EffortScale.WHOOP) "0 to 21 strain" else "0 to 100 Strain",
                         )
                     },
                 ) {
@@ -1870,7 +1870,7 @@ private fun SessionEffortCard(strain: Double, effortScale: EffortScale) {
                         color = Palette.effortBright,
                     )
                     Text(
-                        if (effortScale == EffortScale.WHOOP) "strain (0-21)" else "Effort (0-100)",
+                        if (effortScale == EffortScale.WHOOP) "strain (0-21)" else "Strain (0-100)",
                         style = NoopType.footnote,
                         color = Palette.textTertiary,
                     )

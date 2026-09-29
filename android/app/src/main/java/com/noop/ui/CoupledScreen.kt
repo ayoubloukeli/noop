@@ -296,7 +296,7 @@ private fun HeroCard(
     onTap: () -> Unit,
 ) {
     val a11y = when {
-        recovery != null -> "Recovery ${recovery.roundToInt()} percent. See what shaped your Charge"
+        recovery != null -> "Recovery ${recovery.roundToInt()} percent. See what shaped your Recovery"
         calibrationNights != null ->
             "Recovery calibrating, $calibrationNights of ${Baselines.minNightsSeed} nights"
         else -> "Recovery, no data yet"
@@ -321,7 +321,7 @@ private fun HeroCard(
             .clickable(
                 interactionSource = interaction,
                 indication = null,
-                onClickLabel = "See what shaped your Charge",
+                onClickLabel = "See what shaped your Recovery",
                 onClick = onTap,
             )
             .semantics { contentDescription = a11y },

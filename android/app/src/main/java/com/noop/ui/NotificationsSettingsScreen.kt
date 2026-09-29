@@ -485,7 +485,7 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
         ) {
             FormToggleRow(
                 label = uiString(R.string.l10n_notifications_settings_screen_morning_recap_45ec05c5),
-                help = "After last night is processed, a notification with your Charge and Rest. Posts " +
+                help = "After last night is processed, a notification with your Recovery and Sleep. Posts " +
                     "once a day, after your strap has synced the night.",
                 checked = morningReport,
                 onChange = {
@@ -496,7 +496,7 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
             RowDivider()
             FormToggleRow(
                 label = uiString(R.string.l10n_notifications_settings_screen_post_workout_summary_13e488f5),
-                help = "When a new workout syncs in, a notification with its Effort, duration and average " +
+                help = "When a new workout syncs in, a notification with its Strain, duration and average " +
                     "heart rate. Shows up after the session reaches NOOP on the next sync.",
                 checked = postWorkoutReport,
                 onChange = {
@@ -511,7 +511,7 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
             // #593: NOOP's own optimal-strain-reached nudge (not WHOOP's copy).
             FormToggleRow(
                 label = uiString(R.string.l10n_notifications_settings_screen_optimal_strain_reached_2862ec2b),
-                help = "Once a day, a notification when your Effort reaches the low end of today's optimal " +
+                help = "Once a day, a notification when your Strain reaches the low end of today's optimal " +
                     "strain range (from your recovery). Posts after your strap syncs and NOOP scores the day.",
                 checked = strainTargetReport,
                 onChange = {

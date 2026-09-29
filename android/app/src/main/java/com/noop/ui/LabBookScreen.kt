@@ -635,10 +635,10 @@ data class LabSignal(val key: String, val title: String, val source: String)
 private val LAB_SIGNALS = listOf(
     LabSignal("rhr", "Resting Heart Rate", "my-whoop"),
     LabSignal("hrv", "Heart Rate Variability", "my-whoop"),
-    LabSignal("recovery", "Charge", "my-whoop"),
-    LabSignal("sleep_performance", "Rest", "my-whoop"),
+    LabSignal("recovery", "Recovery", "my-whoop"),
+    LabSignal("sleep_performance", "Sleep Performance", "my-whoop"),
     LabSignal("sleep_total_min", "Asleep Time", "my-whoop"),
-    LabSignal("strain", "Effort", "my-whoop"),
+    LabSignal("strain", "Strain", "my-whoop"),
     LabSignal("skin_temp", "Skin Temperature", "my-whoop"),
     LabSignal("steps", "Steps", "apple-health"),
     LabSignal("weight", "Weight", "apple-health"),

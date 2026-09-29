@@ -695,7 +695,7 @@ private fun ActivityCostCard(cost: com.noop.analytics.ActivityCost) {
                     modifier = Modifier.weight(1f),
                     label = uiString(R.string.l10n_insights_screen_next_morning_61d1ea83),
                     value = "${cost.meanNextMorning.roundToInt()}",
-                    caption = "Charge · $pointsLabel pts",
+                    caption = "Recovery · $pointsLabel pts",
                     accent = accent,
                 )
                 StatTile(
@@ -1610,7 +1610,7 @@ private fun computeRelationships(model: InsightModel): List<Relationship> {
     pearsonAligned(series(Outcome.Hrv), series(Outcome.Recovery))?.let { (r, n) ->
         out.add(
             Relationship(
-                "hrv-rec", "HRV ↔ Charge",
+                "hrv-rec", "HRV ↔ Recovery",
                 "Heart-rate variability as the engine behind your charge score.", r, n,
             ),
         )
@@ -1618,7 +1618,7 @@ private fun computeRelationships(model: InsightModel): List<Relationship> {
     pearsonAligned(series(Outcome.Sleep), series(Outcome.Recovery))?.let { (r, n) ->
         out.add(
             Relationship(
-                "sleep-rec", "Rest ↔ Charge",
+                "sleep-rec", "Sleep ↔ Recovery",
                 "How closely a good night tracks next-morning charge.", r, n,
             ),
         )
@@ -1626,7 +1626,7 @@ private fun computeRelationships(model: InsightModel): List<Relationship> {
     pearsonAligned(series(Outcome.Rhr), series(Outcome.Recovery))?.let { (r, n) ->
         out.add(
             Relationship(
-                "rhr-rec", "Resting HR ↔ Charge",
+                "rhr-rec", "Resting HR ↔ Recovery",
                 "A lower resting heart rate usually means a higher charge.", r, n,
             ),
         )
@@ -1634,7 +1634,7 @@ private fun computeRelationships(model: InsightModel): List<Relationship> {
     pearsonLagged(series(Outcome.Recovery), lagDays = 1)?.let { (r, n) ->
         out.add(
             Relationship(
-                "rec-lag", "Charge → Next-day charge",
+                "rec-lag", "Recovery → Next-day charge",
                 "How much one day's charge carries into the next.", r, n,
             ),
         )
