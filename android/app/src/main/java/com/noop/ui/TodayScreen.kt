@@ -1015,7 +1015,16 @@ fun TodayScreen(
     // fabricated number. Any past day → null (the gauge uses the stored strain). Keyed on the same inputs
     // as the day-scoped loads so it reloads as the selector moves and as a sync/import grows the HR window.
     var liveTodayStrain by remember { mutableStateOf<Double?>(null) }
-    LaunchedEffect(days, selectedDayKey, selectedDayOffset, activeDayCycle, dayCycleMode) {
+    // Pastel Studio: re-integrate today's Strain every minute while Today is open, so it climbs through the
+    // day as new heart-rate samples land (it used to recompute only when the day list or selector changed).
+    var strainTick by remember { mutableIntStateOf(0) }
+    LaunchedEffect(selectedDayOffset) {
+        while (selectedDayOffset == 0) {
+            kotlinx.coroutines.delay(60_000)
+            strainTick++
+        }
+    }
+    LaunchedEffect(days, selectedDayKey, selectedDayOffset, activeDayCycle, dayCycleMode, strainTick) {
         liveTodayStrain = if (selectedDayOffset == 0) {
             val zone = ZoneId.systemDefault()
             val now = System.currentTimeMillis() / 1000
@@ -1640,7 +1649,8 @@ fun TodayScreen(
             }
             val sectionVisible = when (section) {
                 TodaySection.LIVE_SESSION ->
-                    selectedDayOffset == 0 && (liveSessionsEnabled || activeLiveSession != null)
+                    // Pastel Studio: the Start session card is hidden unless a session is already running.
+                    selectedDayOffset == 0 && activeLiveSession != null
                 TodaySection.YOUR_CARDS ->
                     selectedDayOffset == 0 && visibleDashboardCards.isNotEmpty()
                 TodaySection.MENSTRUAL_CYCLE ->
@@ -1691,7 +1701,7 @@ fun TodayScreen(
                                     lastScoredCharge = lastScoredCharge,
                                     effortScale = effortScale,
                                     liveTodayStrain = if (selectedDayOffset == 0) liveTodayStrain else null,
-                                    heroSourceLabel = heroSourceLabel,
+                                    heroSourceLabel = null, // Pastel Studio: no data-source badge on the hero
                                     onScoreInfo = openGuide,
                                     onChargeTap = { showChargeBreakdown = true },
                                     // #1164: today's Rest is provisional while the strap has banked records

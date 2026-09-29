@@ -247,7 +247,7 @@ object LiveSessionPrefs {
     const val KEY_ENABLED = "live_sessions_beta"
 
     fun enabled(context: Context): Boolean =
-        NoopPrefs.of(context).getBoolean(KEY_ENABLED, true)
+        NoopPrefs.of(context).getBoolean(KEY_ENABLED, false)
 
     fun setEnabled(context: Context, enabled: Boolean) {
         NoopPrefs.of(context).edit().putBoolean(KEY_ENABLED, enabled).apply()
