@@ -1164,8 +1164,8 @@ private fun HeartReadout(
                         value = bpm.toDouble(),
                         format = { it.roundToInt().toString() },
                         style = NoopType.number(64f, weight = FontWeight.Bold)
-                            .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                        color = Color.White,
+                            .copy(shadow = Shadow(color = Palette.skyShadow.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                        color = Palette.onSky,
                         modifier = Modifier.clearAndSetSemantics {},
                     )
                 } else {

@@ -791,8 +791,8 @@ private fun HeadlineVessel(value: Double, tint: Color) {
             value = value,
             format = { "${it.roundToInt()}" },
             style = NoopType.number(17f, weight = FontWeight.Bold)
-                .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-            color = Color.White,
+                .copy(shadow = Shadow(color = Palette.skyShadow.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+            color = Palette.onSky,
             modifier = Modifier.clearAndSetSemantics {},
         )
     }

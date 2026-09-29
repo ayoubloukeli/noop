@@ -1472,11 +1472,9 @@ fun TodayScreen(
                         }
                     }
                 }
-                // Pastel Studio: a friendly greeting + bold title in place of the centred wordmark.
-                Column(modifier = Modifier.weight(1f).padding(horizontal = 4.dp)) {
-                    Text(greetingWord(), style = NoopType.subhead, color = Palette.textSecondary)
-                    Text(uiString(R.string.pastel_header_title), style = NoopType.title1, color = Palette.textPrimary)
-                }
+                // Pastel Studio: the screen already carries its "Today" title, so the centred wordmark row
+                // keeps only its controls.
+                Spacer(modifier = Modifier.weight(1f))
                 CustomizeDisc(onClick = { showLayoutEditor = true })
             }
             // The reply to a tap that went nowhere. Wording comes from the BLE layer, the same text
@@ -2343,7 +2341,7 @@ private fun RescanDisc(scanning: Boolean, onClick: () -> Unit) {
             .liquidPress(interaction)
             .clip(CircleShape)
             // The same translucent-white disc its siblings use: part of the header, not a call to action.
-            .background(Color.White.copy(alpha = if (scanning) 0.08f else 0.16f))
+            .background(Palette.onSky.copy(alpha = if (scanning) 0.08f else 0.16f))
             .clickable(
                 interactionSource = interaction,
                 indication = null,
@@ -2361,7 +2359,7 @@ private fun RescanDisc(scanning: Boolean, onClick: () -> Unit) {
             // so the same action now looks the same everywhere it appears.
             if (scanning) Icons.Filled.BluetoothSearching else Icons.Filled.Bluetooth,
             contentDescription = null,
-            tint = Color.White.copy(alpha = if (scanning) 0.45f else 1f),
+            tint = Palette.onSky.copy(alpha = if (scanning) 0.45f else 1f),
             modifier = Modifier.size(16.dp),
         )
     }
@@ -2393,7 +2391,7 @@ private fun CustomizeDisc(onClick: () -> Unit) {
             .clip(CircleShape)
             // The same translucent-white disc the + uses, rather than the frosted card surface #2010
             // reached for: the point is to look like its siblings, not like a call to action.
-            .background(Color.White.copy(alpha = 0.16f))
+            .background(Palette.onSky.copy(alpha = 0.16f))
             .clickable(
                 interactionSource = interaction,
                 indication = null,
@@ -2405,7 +2403,7 @@ private fun CustomizeDisc(onClick: () -> Unit) {
         Icon(
             Icons.Filled.Tune,
             contentDescription = null,
-            tint = Color.White,
+            tint = Palette.onSky,
             modifier = Modifier.size(16.dp),
         )
     }
@@ -2422,7 +2420,7 @@ private fun QuickActionDisc(onClick: () -> Unit) {
             .clip(CircleShape)
             // A translucent-white disc so the + reads on the day-of-sky like the rest of the liquid cluster,
             // with a crisp white glyph. Mirrors iOS LiquidAddButton (a "plus" on Circle().fill(.white@0.16)).
-            .background(Color.White.copy(alpha = 0.16f))
+            .background(Palette.onSky.copy(alpha = 0.16f))
             .clickable(
                 interactionSource = interaction,
                 indication = null,
@@ -2434,7 +2432,7 @@ private fun QuickActionDisc(onClick: () -> Unit) {
         Icon(
             Icons.Filled.Add,
             contentDescription = null,
-            tint = Color.White,
+            tint = Palette.onSky,
             modifier = Modifier.size(16.dp),
         )
     }
@@ -2613,15 +2611,15 @@ private fun LiquidTodayHeader(
                 // ~28sp Bold rounded, matching iOS `StrandFont.rounded(28)`. A soft shadow so it reads on the
                 // day-of-sky. NoopType.number is the house tabular sans; Bold at 28 is the display day title.
                 style = NoopType.number(28f, weight = FontWeight.Bold)
-                    .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.4f), offset = Offset(0f, 1f), blurRadius = 10f)),
-                color = Color.White,
+                    .copy(shadow = Shadow(color = Palette.skyShadow.copy(alpha = 0.4f), offset = Offset(0f, 1f), blurRadius = 10f)),
+                color = Palette.onSky,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
                 humanDate,
-                style = NoopType.caption.copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.35f), offset = Offset(0f, 1f), blurRadius = 8f)),
-                color = Color.White.copy(alpha = 0.78f),
+                style = NoopType.caption.copy(shadow = Shadow(color = Palette.skyShadow.copy(alpha = 0.35f), offset = Offset(0f, 1f), blurRadius = 8f)),
+                color = Palette.onSky.copy(alpha = 0.78f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -2827,8 +2825,8 @@ private fun LiquidBatteryRing(batteryPct: Double?, isRing: Boolean, onClick: () 
             .liquidPress(interaction)
             .clip(CircleShape)
             // A translucent near-black disc + faint white rim, matching iOS (rgba(10,11,16,.5) + white@.15).
-            .background(Color(red = 10f / 255f, green = 11f / 255f, blue = 16f / 255f, alpha = 0.5f))
-            .border(1.dp, Color.White.copy(alpha = 0.15f), CircleShape)
+            .background(if (Palette.isLight) Palette.surfaceRaised else Color(red = 10f / 255f, green = 11f / 255f, blue = 16f / 255f, alpha = 0.5f))
+            .border(1.dp, Palette.onSky.copy(alpha = 0.15f), CircleShape)
             .clickable(
                 interactionSource = interaction,
                 indication = null,
@@ -2850,7 +2848,7 @@ private fun LiquidBatteryRing(batteryPct: Double?, isRing: Boolean, onClick: () 
                 val topLeft = Offset((size.width - d) / 2f, (size.height - d) / 2f)
                 // Track.
                 drawArc(
-                    color = Color.White.copy(alpha = 0.10f),
+                    color = Palette.onSky.copy(alpha = 0.10f),
                     startAngle = -90f,
                     sweepAngle = 360f,
                     useCenter = false,
@@ -2872,13 +2870,13 @@ private fun LiquidBatteryRing(batteryPct: Double?, isRing: Boolean, onClick: () 
             Text(
                 uiString(R.string.l10n_today_screen_pct_roundtoint_05ba4549, pct.roundToInt()),
                 style = NoopType.number(9f, weight = FontWeight.Bold),
-                color = Color.White.copy(alpha = 0.9f),
+                color = Palette.onSky.copy(alpha = 0.9f),
             )
         } else {
             Icon(
                 Icons.AutoMirrored.Filled.BatteryUnknown,
                 contentDescription = null,
-                tint = Color.White.copy(alpha = 0.5f),
+                tint = Palette.onSky.copy(alpha = 0.5f),
                 modifier = Modifier.size(15.dp),
             )
         }
@@ -2945,8 +2943,8 @@ private fun LiquidWordmark() {
             Text(
                 ch.toString(),
                 style = NoopType.number(16f, weight = FontWeight.Bold)
-                    .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.25f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                color = Color.White.copy(alpha = 0.5f),
+                    .copy(shadow = Shadow(color = Palette.skyShadow.copy(alpha = 0.25f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                color = Palette.onSky.copy(alpha = 0.5f),
             )
         }
     }
@@ -3400,8 +3398,8 @@ private fun HeroScoreVessel(
                         FontWeight.Bold
                     },
                 )
-                    .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                color = Color.White,
+                    .copy(shadow = Shadow(color = Palette.skyShadow.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                color = Palette.onSky,
                 modifier = Modifier.clearAndSetSemantics {},
             )
         }

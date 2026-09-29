@@ -389,8 +389,8 @@ private fun HeroCentre(recovery: Double?, readinessLevel: ReadinessEngine.Level)
                 value = recovery,
                 format = { "${it.roundToInt()}%" },
                 style = NoopType.number(56f, weight = FontWeight.Bold)
-                    .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                color = Color.White,
+                    .copy(shadow = Shadow(color = Palette.skyShadow.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                color = Palette.onSky,
                 modifier = Modifier.clearAndSetSemantics {},
             )
         } else {
@@ -461,8 +461,8 @@ private fun StrainCard(dayStrain21: Double?, recovery: Double?, calories: Double
                             value = dayStrain21,
                             format = { String.format(Locale.US, "%.1f", it) },
                             style = NoopType.number(30f, weight = FontWeight.Bold)
-                                .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                            color = Color.White,
+                                .copy(shadow = Shadow(color = Palette.skyShadow.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                            color = Palette.onSky,
                             modifier = Modifier.clearAndSetSemantics {},
                         )
                     }
@@ -591,8 +591,8 @@ private fun SleepCard(
                         value = sleepPerformance,
                         format = { it.roundToInt().toString() },
                         style = NoopType.number(26f, weight = FontWeight.Bold)
-                            .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                        color = Color.White,
+                            .copy(shadow = Shadow(color = Palette.skyShadow.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                        color = Palette.onSky,
                         modifier = Modifier.clearAndSetSemantics {},
                     )
                 }

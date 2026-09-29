@@ -610,8 +610,8 @@ fun BreatheScreen(viewModel: AppViewModel) {
                         Text(
                             bpm?.toString() ?: "—",
                             style = NoopType.number(40f, weight = FontWeight.Bold)
-                                .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                            color = Color.White,
+                                .copy(shadow = Shadow(color = Palette.skyShadow.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                            color = Palette.onSky,
                         )
                         Text("BPM", style = NoopType.footnote.copy(letterSpacing = 0.8.sp), color = Palette.textTertiary)
                     }

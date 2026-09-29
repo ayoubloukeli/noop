@@ -72,6 +72,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import kotlinx.coroutines.flow.StateFlow
+import com.noop.ble.LiveState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -87,6 +90,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -588,6 +592,7 @@ fun AppRoot(viewModel: AppViewModel = viewModel()) {
                         onTabSelected = { dest ->
                             if (dest.route != currentRoute) nav.navigateTopLevel(dest.route)
                         },
+                        liveFlow = viewModel.live,
                     )
                 }
             },
@@ -944,6 +949,7 @@ fun AppRoot(viewModel: AppViewModel = viewModel()) {
             onTabSelected = { dest ->
                 if (dest.route != currentRoute) nav.navigateTopLevel(dest.route)
             },
+            liveFlow = viewModel.live,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .graphicsLayer {
@@ -1141,6 +1147,7 @@ private fun GlassBottomBar(
     current: Destination,
     onTabSelected: (Destination) -> Unit,
     modifier: Modifier = Modifier,
+    liveFlow: StateFlow<LiveState>? = null,
 ) {
     // One binding, used by BOTH the slots and the More-lit predicate below. #2218's note applies here
     // twice over: a second copy of "which tabs exist" is what let Coach light two slots at once, and a
@@ -1194,6 +1201,16 @@ private fun GlassBottomBar(
                         onClick = { onTabSelected(tab.dest) },
                     )
                 }
+                // Pastel Studio: live heart rate right in the bar. Collected inside its own slot so the
+                // per-second tick recomposes only this slot, never the rest of the bar or the screen.
+                if (liveFlow != null) {
+                    LiveHrSlot(
+                        liveFlow = liveFlow,
+                        active = current == Destination.Live,
+                        modifier = Modifier.weight(1f),
+                        onClick = { onTabSelected(Destination.Live) },
+                    )
+                }
                 visibleTrailing.forEach { tab ->
                     BarSlot(
                         icon = tab.icon,
@@ -1214,13 +1231,35 @@ private fun GlassBottomBar(
                     // is what made adding Coach a two-part change: the slot alone would have lit Coach
                     // AND More together, because this predicate had never heard of it. (#2218)
                     active = barLeadingTabs.none { it.dest == current } &&
-                        visibleTrailing.none { it.dest == current },
+                        visibleTrailing.none { it.dest == current } &&
+                        !(liveFlow != null && current == Destination.Live),
                     modifier = Modifier.weight(1f),
                     onClick = { onTabSelected(Destination.More) },
                 )
             }
         }
     }
+}
+
+/** Pastel Studio: the bar's live heart-rate slot. Shows the current bpm when the strap is streaming
+ *  (a dash otherwise) and opens the Live screen. */
+@Composable
+private fun LiveHrSlot(
+    liveFlow: StateFlow<LiveState>,
+    active: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    val live by liveFlow.collectAsState()
+    val bpm = live.heartRate
+    BarSlot(
+        icon = Icons.Filled.Favorite,
+        label = if (bpm != null) "$bpm bpm" else "Live",
+        active = active,
+        modifier = modifier,
+        onClick = onClick,
+        iconTintOverride = if (bpm != null && !active) Palette.metricRose else null,
+    )
 }
 
 /** One nav slot: an icon over a small label. Active = gold accent (semibold), inactive = textSecondary.
@@ -1232,10 +1271,11 @@ private fun BarSlot(
     active: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    iconTintOverride: Color? = null,
 ) {
     val tint = if (active) Palette.accent else Palette.textSecondary
     // Pastel Studio: the active tab sits in a filled ink pill with a light icon.
-    val iconTint = if (active) Palette.goldDeepText else Palette.textSecondary
+    val iconTint = iconTintOverride ?: if (active) Palette.goldDeepText else Palette.textSecondary
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(14.dp))

@@ -219,6 +219,12 @@ object Palette {
     val titaniumGradient: List<Pair<Float, Color>>
         get() = listOf(0.0f to titaniumTop, 0.40f to titaniumMid, 0.75f to titaniumLow, 1.0f to titaniumDeep)
 
+    /** Pastel Studio: text/icons drawn straight over the header sky. White on the dark sky, ink on the
+     *  light pastel wash, so header titles and controls stay readable in both themes. */
+    val onSky: Color get() = if (isLight) active.textPrimary else Color.White
+    /** The legibility shadow under sky text: none on the light wash (it only muddies dark text). */
+    val skyShadow: Color get() = if (isLight) Color.Transparent else Color.Black
+
     /** Gauge-tip / sparkline-head core — white on dark, deep ink on light. */
     val tipCore get() = active.tipCore
 
