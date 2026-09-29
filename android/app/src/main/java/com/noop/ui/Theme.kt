@@ -223,7 +223,8 @@ object Palette {
      *  light pastel wash, so header titles and controls stay readable in both themes. */
     val onSky: Color get() = if (isLight) active.textPrimary else Color.White
     /** The legibility shadow under sky text: none on the light wash (it only muddies dark text). */
-    val skyShadow: Color get() = if (isLight) Color.Transparent else Color.Black
+    // (White, not Transparent: call sites apply .copy(alpha), and Transparent.copy(alpha) is black again.)
+    val skyShadow: Color get() = if (isLight) Color.White else Color.Black
 
     /** Gauge-tip / sparkline-head core — white on dark, deep ink on light. */
     val tipCore get() = active.tipCore

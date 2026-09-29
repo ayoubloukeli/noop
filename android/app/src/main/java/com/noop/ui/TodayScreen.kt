@@ -1425,6 +1425,7 @@ fun TodayScreen(
                 onQuickActions = onQuickActions,
                 onOpenSettings = onOpenSettings,
                 onOpenDevices = onOpenDevices,
+                onCustomize = { showLayoutEditor = true },
             )
             // WORDMARK (iOS LiquidWordmark parity): a subtle centred "N O O P" @ ~50% opacity, with a
             // tap easter egg. Still shares its row with the customization control, as #486 intended,
@@ -1441,7 +1442,7 @@ fun TodayScreen(
             // control exactly, so the wordmark stays optically centred while owning the space BETWEEN them.
             // Overlap is now unexpressible at any label width, in any locale, because the two occupy
             // different slots rather than the same one.
-            Row(
+            if (!liveSnap.connected || liveSnap.scanning) Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -1473,10 +1474,9 @@ fun TodayScreen(
                         }
                     }
                 }
-                // Pastel Studio: the screen already carries its "Today" title, so the centred wordmark row
-                // keeps only its controls.
+                // Pastel Studio: the screen already carries its "Today" title and the customize control moved
+                // up into the header cluster, so this row only holds the reconnect control.
                 Spacer(modifier = Modifier.weight(1f))
-                CustomizeDisc(onClick = { showLayoutEditor = true })
             }
             // The reply to a tap that went nowhere. Wording comes from the BLE layer, the same text
             // Live and Onboarding show, so this adds no copy of its own.
@@ -1712,7 +1712,9 @@ fun TodayScreen(
                             // #1001: the shared resolution, not a fourth hand-rolled copy of it. Stays null
                             // for a navigated past day so the caption is a TODAY-only explanation.
                             val todayEffort = if (selectedDayOffset == 0) effortForDay else null
-                            if (todayEffort != null && todayEffort < 1.0) {
+                            // Pastel Studio: the "no cardio load yet" explainer is hidden (the Strain ring already
+                            // reads 0.0); the tap-through on Strain still explains the score.
+                            if (false && todayEffort != null && todayEffort < 1.0) {
                                 Row(
                                     modifier = Modifier.padding(horizontal = 2.dp),
                                     horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -1774,7 +1776,7 @@ fun TodayScreen(
                                     // The label names the window the DETAILED tiles graph, so it is only honest while they are
                                     // drawn: with the trend graphs off (the default) nothing in this section renders a
                                     // trend, and the header was still announcing one (#2376). Twin of the Apple change.
-                                    SectionHeader(uiString(R.string.today_section_key_metrics), overline = dayLabel, trailing = if (keyMetricsDetailed) trendWindowLabel(keyMetricsWindowDays) else null)
+                                    SectionHeader(uiString(R.string.today_section_key_metrics), overline = null, trailing = if (keyMetricsDetailed) trendWindowLabel(keyMetricsWindowDays) else null)
                                 }
                                 TodayEditAction(
                                     onClick = { showMetricsEditor = true },
@@ -2553,6 +2555,8 @@ private fun LiquidTodayHeader(
     onOpenSettings: () -> Unit,
     onOpenDevices: () -> Unit,
     modifier: Modifier = Modifier,
+    // Pastel Studio: the layout "customize" control lives in this top cluster, level with the battery.
+    onCustomize: (() -> Unit)? = null,
 ) {
     var showPicker by remember { mutableStateOf(false) }
     if (showPicker) {
@@ -2679,6 +2683,7 @@ private fun LiquidTodayHeader(
                 is HeaderBatteryDisplay.State.Charge ->
                     LiquidBatteryRing(batteryPct = battery.pct, isRing = battery.isRing, onClick = onOpenDevices)
             }
+            onCustomize?.let { CustomizeDisc(onClick = it) }
         }
     }
 }
@@ -6380,7 +6385,8 @@ private fun LiquidKeyTile(
             .clip(shape)
             .then(
                 if (solid) Modifier.background(Brush.linearGradient(listOf(data.tint, solidDeep)), shape)
-                else Modifier.frostedCardSurface(cornerRadius = Metrics.cardRadius)
+                // Every other tile gets its own pastel colour world (tint blended over white).
+                else Modifier.frostedCardSurface(tint = data.tint, cornerRadius = Metrics.cardRadius)
             )
             .padding(horizontal = 18.dp, vertical = 16.dp)
             .semantics { contentDescription = uiString(R.string.l10n_today_screen_data_label_data_value_data_unit_27f6fd6b, data.label, displayValue, data.unit).trim() },
@@ -6399,7 +6405,7 @@ private fun LiquidKeyTile(
                 modifier = Modifier
                     .size(34.dp)
                     .clip(CircleShape)
-                    .background(if (solid) Color.White.copy(alpha = 0.22f) else data.tint.copy(alpha = 0.16f)),
+                    .background(if (solid) Color.White.copy(alpha = 0.22f) else Color.White.copy(alpha = 0.7f)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
