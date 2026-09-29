@@ -135,7 +135,11 @@ fun Modifier.frostedCardSurface(
         // off the warm-paper canvas with a soft drop shadow — the hairline alone is too faint on paper.
         .then(
             if (Palette.isLight)
-                Modifier.shadow(elevation = (6f * op).dp, shape = RoundedCornerShape(cornerRadius), clip = false)
+                // Pastel Studio: a very soft, low-contrast lift instead of a hard drop shadow.
+                Modifier.shadow(
+                    elevation = (3f * op).dp, shape = RoundedCornerShape(cornerRadius), clip = false,
+                    ambientColor = Color(0x14000000), spotColor = Color(0x1A000000),
+                )
             else Modifier
         )
         .drawBehind {
@@ -144,7 +148,17 @@ fun Modifier.frostedCardSurface(
             val fill = Palette.surfaceRaised.copy(alpha = Palette.surfaceRaised.alpha * op)
             val border = Palette.hairline.copy(alpha = Palette.hairline.alpha * op)
 
-            if (tint == null) {
+            if (Palette.isLight) {
+                // Pastel Studio (light): clean white card, or a solid pastel fill for a domain-tinted card
+                // (the tint blended ~26% over white). No hairline: the soft shadow carries the edge.
+                val cardFill = if (tint == null) fill else Color(
+                    red = 1f + (tint.red - 1f) * 0.26f * washStrength.coerceIn(0f, 1f),
+                    green = 1f + (tint.green - 1f) * 0.26f * washStrength.coerceIn(0f, 1f),
+                    blue = 1f + (tint.blue - 1f) * 0.26f * washStrength.coerceIn(0f, 1f),
+                    alpha = op,
+                )
+                drawRoundRect(color = cardFill, cornerRadius = corner)
+            } else if (tint == null) {
                 // NEUTRAL card (iOS FrostedCardSurface tint == nil): a FLAT raised surface — no vertical
                 // bevel gradient, no accent wash, and a PLAIN hairline border (no accent bias).
                 drawRoundRect(color = fill, cornerRadius = corner)

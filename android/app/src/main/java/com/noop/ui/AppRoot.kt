@@ -13,6 +13,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -1233,6 +1234,8 @@ private fun BarSlot(
     onClick: () -> Unit,
 ) {
     val tint = if (active) Palette.accent else Palette.textSecondary
+    // Pastel Studio: the active tab sits in a filled ink pill with a light icon.
+    val iconTint = if (active) Palette.goldDeepText else Palette.textSecondary
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(14.dp))
@@ -1248,8 +1251,16 @@ private fun BarSlot(
     ) {
         // Icon and label scale together with the padding above, so the slot grows as one piece rather
         // than a bigger box around the same small glyph.
-        Icon(icon, contentDescription = null, tint = tint,
-             modifier = Modifier.size(Metrics.iconSmall * BottomBarStyleStore.scale))
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(50))
+                .background(if (active) Palette.accent else androidx.compose.ui.graphics.Color.Transparent)
+                .padding(horizontal = 14.dp * BottomBarStyleStore.scale, vertical = 5.dp * BottomBarStyleStore.scale),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(icon, contentDescription = null, tint = iconTint,
+                 modifier = Modifier.size(Metrics.iconSmall * BottomBarStyleStore.scale))
+        }
         Text(
             label,
             style = NoopType.footnote.copy(

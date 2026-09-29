@@ -1,0 +1,40 @@
+name: Build Pastel APK
+
+# Builds the Pastel Studio Android app and publishes it as a downloadable release ("pastel-latest").
+# The debug build installs BESIDE the official NOOP app (id com.noop.whoop.debug), so no data is replaced.
+on:
+  workflow_dispatch:
+  push:
+    branches: [pastel-ui]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pastel-apk
+  cancel-in-progress: true
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v5
+      - name: Build APK
+        run: ./gradlew assembleFullDebug
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp app/build/outputs/apk/full/debug/*.apk NOOP-Pastel.apk
+          gh release delete pastel-latest --repo "$GITHUB_REPOSITORY" --cleanup-tag --yes || true
+          gh release create pastel-latest NOOP-Pastel.apk --repo "$GITHUB_REPOSITORY" \
+            --target "${{ github.sha }}" --title "NOOP Pastel" \
+            --notes "Tap NOOP-Pastel.apk below to download. Installs beside the official NOOP app."

@@ -104,3 +104,9 @@ NOOP contains no WHOOP proprietary code, binaries, firmware, logos, or assets, a
 performs no DRM circumvention. It operates only with the user's own device and data.
 NOOP is **not a medical device**; all metrics (HR, HRV, recovery, strain, sleep,
 SpO₂, temperature) are approximations and not clinically validated.
+
+## Plus Jakarta Sans (Pastel Studio re-skin)
+
+The Android font files `android/app/src/main/res/font/jakarta_*.ttf` are Plus Jakarta Sans,
+Copyright 2020 The Plus Jakarta Sans Project Authors (https://github.com/tokotype/PlusJakartaSans),
+licensed under the SIL Open Font License, Version 1.1.

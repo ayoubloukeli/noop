@@ -23,7 +23,9 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import com.noop.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -405,9 +407,9 @@ object Metrics {
     val space18 = 18.dp
     val space24 = 24.dp
     val sourceBadgeHeight = 18.dp
-    val cardRadius = 18.dp   // Bevel continuous radius (18–22dp)
+    val cardRadius = 26.dp   // Pastel Studio: soft, generous card rounding
     val cornerXs = 2.dp
-    val cornerSm = 12.dp
+    val cornerSm = 16.dp
     val cornerBadge = 6.dp
     val cornerPill = 50.dp
     val cardPadding = 16.dp
@@ -466,13 +468,21 @@ object Metrics {
 object NoopType {
     // Helvetica Neue family — falls back to the platform grotesque (SansSerif) when
     // no res/font/helvetica_neue asset is bundled, per the v3 type spec.
-    private val sans = FontFamily.SansSerif
+    // Pastel Studio: Plus Jakarta Sans (SIL OFL 1.1, bundled in res/font), a friendly geometric grotesque.
+    // Glyphs outside Latin / Latin-Extended fall back to the system font automatically.
+    private val sans = FontFamily(
+        Font(R.font.jakarta_regular, FontWeight.Normal),
+        Font(R.font.jakarta_medium, FontWeight.Medium),
+        Font(R.font.jakarta_semibold, FontWeight.SemiBold),
+        Font(R.font.jakarta_bold, FontWeight.Bold),
+        Font(R.font.jakarta_extrabold, FontWeight.ExtraBold),
+    )
     private val monoFamily = FontFamily.Monospace
 
     /** Display 64–80 / Bold — the recovery ring number. Tight tracking (≈ -0.04em),
      *  tabular figures so a changing value never reflows. Mirrors StrandFont.display. */
     fun display(size: Float = 72f) = TextStyle(
-        fontFamily = sans, fontWeight = FontWeight.Bold, fontSize = size.sp,
+        fontFamily = sans, fontWeight = FontWeight.ExtraBold, fontSize = size.sp,
         letterSpacing = displayTracking(size).sp, fontFeatureSettings = "tnum",
     )
 
@@ -480,9 +490,9 @@ object NoopType {
      *  display(); exposed to mirror StrandFont.displayTracking. */
     fun displayTracking(size: Float = 72f): Float = -size * 0.04f
 
-    val title1 = TextStyle(fontFamily = sans, fontWeight = FontWeight.Bold, fontSize = 28.sp)
-    val title2 = TextStyle(fontFamily = sans, fontWeight = FontWeight.SemiBold, fontSize = 22.sp)
-    val headline = TextStyle(fontFamily = sans, fontWeight = FontWeight.SemiBold, fontSize = 17.sp)
+    val title1 = TextStyle(fontFamily = sans, fontWeight = FontWeight.ExtraBold, fontSize = 30.sp, letterSpacing = (-0.6).sp, lineHeight = 34.sp)
+    val title2 = TextStyle(fontFamily = sans, fontWeight = FontWeight.Bold, fontSize = 22.sp, letterSpacing = (-0.3).sp)
+    val headline = TextStyle(fontFamily = sans, fontWeight = FontWeight.Bold, fontSize = 17.sp, letterSpacing = (-0.1).sp)
     val body = TextStyle(fontFamily = sans, fontWeight = FontWeight.Normal, fontSize = 15.sp)
     val subhead = TextStyle(fontFamily = sans, fontWeight = FontWeight.Normal, fontSize = 13.sp)
     val caption = TextStyle(fontFamily = sans, fontWeight = FontWeight.Normal, fontSize = 12.sp)
@@ -490,8 +500,8 @@ object NoopType {
 
     /** Overline 11 / Bold, +1.4 tracking, ALL-CAPS at use site. */
     val overline = TextStyle(
-        fontFamily = sans, fontWeight = FontWeight.Bold, fontSize = 11.sp,
-        letterSpacing = 1.4.sp,
+        fontFamily = sans, fontWeight = FontWeight.SemiBold, fontSize = 11.sp,
+        letterSpacing = 1.0.sp,
     )
 
     /** Mono 13 — raw / log views. */
@@ -515,7 +525,7 @@ object NoopType {
     val tileValue = number(24f)
     val tileValueLarge = number(26f)
 
-    const val overlineTracking = 1.4f
+    const val overlineTracking = 1.0f
 }
 
 // MARK: - Material3 bridge
@@ -560,10 +570,10 @@ private val NoopMaterialTypography = Typography(
 
 private val NoopShapes = Shapes(
     extraSmall = RoundedCornerShape(8.dp),
-    small = RoundedCornerShape(12.dp),
+    small = RoundedCornerShape(14.dp),
     medium = RoundedCornerShape(Metrics.cardRadius),
-    large = RoundedCornerShape(20.dp),
-    extraLarge = RoundedCornerShape(28.dp),
+    large = RoundedCornerShape(28.dp),
+    extraLarge = RoundedCornerShape(32.dp),
 )
 
 /**
