@@ -139,6 +139,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -3364,7 +3365,7 @@ private fun HeroScoreVessel(
             value = value,
             color = tint,
             diameter = diameter,
-            lineWidth = diameter * 0.10f,
+            lineWidth = diameter * 0.12f,
             modifier = modifier,
             showsLabel = showsValue,
             format = format,
@@ -6239,26 +6240,28 @@ private fun MetricGrid(
 
     // iOS `keyMetricsSection` LazyVGrid: 3 columns, spacing 8. Build from rows so tile heights tile uniformly
     // and a partial last row pads with empty weight so the columns stay aligned.
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        tiles.chunked(3).forEach { rowTiles ->
+    // Pastel Studio: 2 big columns (was 3 compact), roomier gaps; the first tile is the bold feature card.
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        tiles.chunked(2).forEachIndexed { rowIndex, rowTiles ->
             // Detailed rows equalise heights (IntrinsicSize.Max + fillMaxHeight, the #399 idiom): a
             // graph-less tile (Steps/Weight/Calories) sharing a row with graphed neighbours must not
             // shrink its card. Compact rows keep the plain layout, byte-identical to before.
             Row(
-                modifier = if (detailed) Modifier.height(IntrinsicSize.Max) else Modifier,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.height(IntrinsicSize.Max),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                rowTiles.forEach { (metric, tile) ->
+                rowTiles.forEachIndexed { colIndex, (metric, tile) ->
                     LiquidKeyTile(
                         tile,
                         icon = keyMetricIcon(metric),
                         detailed = detailed,
                         windowDays = windowDays,
                         onClick = tapFor(metric),
-                        modifier = Modifier.weight(1f).then(if (detailed) Modifier.fillMaxHeight() else Modifier),
+                        modifier = Modifier.weight(1f).fillMaxHeight(),
+                        highlight = rowIndex == 0 && colIndex == 0,
                     )
                 }
-                repeat(3 - rowTiles.size) { Spacer(Modifier.weight(1f)) }
+                repeat(2 - rowTiles.size) { Spacer(Modifier.weight(1f)) }
             }
         }
         // S5: the "Show all metrics" / "Show fewer" expander — a centered link like iOS. Toggles visibility
@@ -6349,6 +6352,7 @@ private fun LiquidKeyTile(
     windowDays: Int = 14,
     onClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    highlight: Boolean = false,
 ) {
     val hasValue = data.value != NO_DATA
     val displayValue = localizedMetricValue(data.value)
@@ -6363,94 +6367,80 @@ private fun LiquidKeyTile(
     } else {
         modifier
     }
+    // Pastel Studio tile: a big, airy card. Label + tinted icon chip on top, a large value, then a trend
+    // wave and a thick liquid bar. [highlight] turns the tile into a solid, gradient-filled feature card
+    // (white type), the one bold accent on the grid.
+    val shape = RoundedCornerShape(Metrics.cardRadius)
+    val solid = highlight && hasValue
+    val solidDeep = Color(red = data.tint.red * 0.78f, green = data.tint.green * 0.78f, blue = data.tint.blue * 0.78f, alpha = 1f)
+    val ink = if (solid) Color.White else Palette.textPrimary
+    val soft = if (solid) Color.White.copy(alpha = 0.82f) else Palette.textSecondary
     Column(
         modifier = base
-            .clip(RoundedCornerShape(16.dp))
-            .frostedCardSurface(cornerRadius = 16.dp)
-            .padding(horizontal = 12.dp, vertical = 11.dp)
-            .semantics { contentDescription = uiString(R.string.l10n_today_screen_data_label_data_value_data_unit_27f6fd6b, data.label, displayValue, data.unit).trim() },
-        verticalArrangement = Arrangement.spacedBy(6.dp),
-    ) {
-        // iOS ktile parity: a small metric glyph before the overline label, tinted to the tile colour at
-        // 0.72 opacity (LiquidTodayView `Image(systemName:).foregroundStyle(tint.opacity(0.72))`). Decorative
-        // — the tile's own semantics already announce the label/value, so the icon is contentDescription-null.
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            Icon(
-                icon,
-                contentDescription = null,
-                tint = data.tint.copy(alpha = 0.72f),
-                modifier = Modifier.size(12.dp),
+            .clip(shape)
+            .then(
+                if (solid) Modifier.background(Brush.linearGradient(listOf(data.tint, solidDeep)), shape)
+                else Modifier.frostedCardSurface(cornerRadius = Metrics.cardRadius)
             )
+            .padding(horizontal = 18.dp, vertical = 16.dp)
+            .semantics { contentDescription = uiString(R.string.l10n_today_screen_data_label_data_value_data_unit_27f6fd6b, data.label, displayValue, data.unit).trim() },
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                data.label.uppercase(),
-                style = NoopType.overline.copy(fontSize = 9.sp, letterSpacing = 1.2.sp),
-                color = Palette.textTertiary,
+                data.label,
+                style = NoopType.headline,
+                color = soft,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
             )
+            Box(
+                modifier = Modifier
+                    .size(34.dp)
+                    .clip(CircleShape)
+                    .background(if (solid) Color.White.copy(alpha = 0.22f) else data.tint.copy(alpha = 0.16f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = null,
+                    tint = if (solid) Color.White else data.tint,
+                    modifier = Modifier.size(18.dp),
+                )
+            }
         }
-        Row(verticalAlignment = Alignment.Bottom) {
+        Column {
             Text(
                 displayValue,
-                style = NoopType.number(17f),
-                color = if (hasValue) Palette.textPrimary else Palette.textTertiary,
+                style = NoopType.number(30f, FontWeight.ExtraBold),
+                color = if (hasValue) ink else Palette.textTertiary,
                 maxLines = 1,
             )
             if (data.unit.isNotEmpty() && hasValue) {
-                Text(
-                    uiString(R.string.l10n_today_screen_data_unit_c768ef8c, data.unit),
-                    style = NoopType.caption,
-                    color = Palette.textPrimary,
-                    maxLines = 1,
-                )
+                Text(data.unit, style = NoopType.subhead, color = soft, maxLines = 1)
             }
         }
-        // #1491: the Steps subtitle — the calibration status behind an estimate (#760/#792, computed and
-        // then dropped on the floor until now: `stepsEstimateCaption` was passed into this grid and never
-        // read), or, on a blank tile, what actually unblocks it. One line, ellipsised, and only rendered
-        // when a tile supplies one, so every other tile keeps its current height.
         data.caption?.let { cap ->
-            Text(
-                cap,
-                style = NoopType.caption,
-                color = Palette.textTertiary,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+            Text(cap, style = NoopType.caption, color = soft, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+        // Equal-height rows: pin the chart + bar to the bottom edge so neighbours line up.
+        Spacer(Modifier.weight(1f))
+        val tail = data.spark.takeLast(windowDays)
+        if (tail.size >= 2) {
+            Sparkline(
+                values = tail,
+                color = if (solid) Color.White else data.tint,
+                modifier = Modifier.fillMaxWidth().height(40.dp),
             )
         }
-        // Detailed rows are height-equalised (fillMaxHeight): pin the bar + graph to the bottom edge so a
-        // graph-less tile's bar lines up with its neighbours' bars rather than floating mid-card.
-        if (detailed) Spacer(Modifier.weight(1f))
         LiquidTube(
             frac = data.frac ?: 0.0,
-            tint = data.tint,
-            height = 8.dp,
+            tint = if (solid) Color.White else data.tint,
+            height = 12.dp,
             animated = false,
             modifier = Modifier.fillMaxWidth(),
         )
-        // Detailed tiles: the windowed trend graph under the bar (same Sparkline leaf the Sleep tiles use,
-        // at the shared tile spark height), tinted to the metric so the graph reads as the same signal.
-        // Cap to the editor's chosen window (7 / 14 / 30) so "1 month" draws its full span; the w-based
-        // series is already windowed, but calories/rest sparks run longer, so this trims them to match.
-        if (detailed) {
-            val tail = data.spark.takeLast(windowDays)
-            if (tail.size >= 2) {
-                Sparkline(
-                    values = tail,
-                    color = data.tint,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        // A touch more air between the fill bar and the graph (tester feedback: the two
-                        // read as one element when they nearly touch).
-                        .padding(top = 6.dp)
-                        .height(Metrics.sparkHeight),
-                )
-            }
-        }
     }
 }
 

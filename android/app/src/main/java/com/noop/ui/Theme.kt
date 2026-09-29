@@ -418,7 +418,7 @@ object Metrics {
     val cornerSm = 16.dp
     val cornerBadge = 6.dp
     val cornerPill = 50.dp
-    val cardPadding = 16.dp
+    val cardPadding = 20.dp
     val gap = 12.dp           // gap between cards
     val sectionGap = 28.dp    // gap between sections
     // #765: the ONE inter-card vertical spacing for a screen's top-level scroll rows. Both ScreenScaffold
@@ -426,8 +426,8 @@ object Metrics {
     // rhythm instead of a bare `20.dp` literal repeated per scaffold (and Today no longer injects ad-hoc
     // Spacer rows that broke that rhythm). One token = uniform, consistent gaps across the screens.
     val screenRowSpacing = 20.dp
-    val screenPadding = 24.dp
-    val tileHeight = 108.dp   // every metric tile is this tall
+    val screenPadding = 20.dp
+    val tileHeight = 128.dp   // every metric tile is this tall (Pastel Studio: roomier)
     val chartHeight = 220.dp
     val dialogScrollableMaxHeight = 560.dp
     val divider = 1.dp
@@ -496,17 +496,17 @@ object NoopType {
      *  display(); exposed to mirror StrandFont.displayTracking. */
     fun displayTracking(size: Float = 72f): Float = -size * 0.04f
 
-    val title1 = TextStyle(fontFamily = sans, fontWeight = FontWeight.ExtraBold, fontSize = 30.sp, letterSpacing = (-0.6).sp, lineHeight = 34.sp)
-    val title2 = TextStyle(fontFamily = sans, fontWeight = FontWeight.Bold, fontSize = 22.sp, letterSpacing = (-0.3).sp)
-    val headline = TextStyle(fontFamily = sans, fontWeight = FontWeight.Bold, fontSize = 17.sp, letterSpacing = (-0.1).sp)
-    val body = TextStyle(fontFamily = sans, fontWeight = FontWeight.Normal, fontSize = 15.sp)
-    val subhead = TextStyle(fontFamily = sans, fontWeight = FontWeight.Normal, fontSize = 13.sp)
-    val caption = TextStyle(fontFamily = sans, fontWeight = FontWeight.Normal, fontSize = 12.sp)
-    val footnote = TextStyle(fontFamily = sans, fontWeight = FontWeight.Normal, fontSize = 11.sp)
+    val title1 = TextStyle(fontFamily = sans, fontWeight = FontWeight.ExtraBold, fontSize = 34.sp, letterSpacing = (-0.7).sp, lineHeight = 40.sp)
+    val title2 = TextStyle(fontFamily = sans, fontWeight = FontWeight.Bold, fontSize = 25.sp, letterSpacing = (-0.4).sp)
+    val headline = TextStyle(fontFamily = sans, fontWeight = FontWeight.Bold, fontSize = 18.sp, letterSpacing = (-0.1).sp)
+    val body = TextStyle(fontFamily = sans, fontWeight = FontWeight.Normal, fontSize = 16.sp, lineHeight = 23.sp)
+    val subhead = TextStyle(fontFamily = sans, fontWeight = FontWeight.Normal, fontSize = 14.sp, lineHeight = 20.sp)
+    val caption = TextStyle(fontFamily = sans, fontWeight = FontWeight.Normal, fontSize = 13.sp)
+    val footnote = TextStyle(fontFamily = sans, fontWeight = FontWeight.Normal, fontSize = 12.sp)
 
     /** Overline 11 / Bold, +1.4 tracking, ALL-CAPS at use site. */
     val overline = TextStyle(
-        fontFamily = sans, fontWeight = FontWeight.SemiBold, fontSize = 11.sp,
+        fontFamily = sans, fontWeight = FontWeight.SemiBold, fontSize = 12.sp,
         letterSpacing = 1.0.sp,
     )
 
@@ -523,13 +523,13 @@ object NoopType {
         fontFamily = monoFamily, fontWeight = weight, fontSize = size.sp,
     )
 
-    val bodyNumber = TextStyle(fontFamily = sans, fontWeight = FontWeight.Medium, fontSize = 15.sp, fontFeatureSettings = "tnum")
-    val captionNumber = TextStyle(fontFamily = sans, fontWeight = FontWeight.Medium, fontSize = 12.sp, fontFeatureSettings = "tnum")
-    val metricInline = number(15f)
-    val chartValue = number(18f)
-    val chartValueLarge = number(22f)
-    val tileValue = number(24f)
-    val tileValueLarge = number(26f)
+    val bodyNumber = TextStyle(fontFamily = sans, fontWeight = FontWeight.Medium, fontSize = 16.sp, fontFeatureSettings = "tnum")
+    val captionNumber = TextStyle(fontFamily = sans, fontWeight = FontWeight.Medium, fontSize = 13.sp, fontFeatureSettings = "tnum")
+    val metricInline = number(16f)
+    val chartValue = number(20f)
+    val chartValueLarge = number(25f)
+    val tileValue = number(28f, FontWeight.Bold)
+    val tileValueLarge = number(30f, FontWeight.Bold)
 
     const val overlineTracking = 1.0f
 }

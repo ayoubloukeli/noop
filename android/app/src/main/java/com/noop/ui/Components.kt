@@ -1016,7 +1016,8 @@ fun GlowRing(
             label = uiString(R.string.l10n_components_glowring_value_ac0e87de),
         ).value
     }
-    val trackColor = Palette.textPrimary.copy(alpha = 0.10f)
+    // Pastel Studio: on light, the track is a soft wash of the ring's own colour (a tinted "glass" groove).
+    val trackColor = if (Palette.isLight) color.copy(alpha = 0.14f) else Palette.textPrimary.copy(alpha = 0.10f)
     Box(modifier = modifier.size(diameter), contentAlignment = Alignment.Center) {
         Box(
             modifier = Modifier
@@ -1094,10 +1095,40 @@ fun GlowRing(
                         // double edge rather than a glow. Flat crisp arc only, exactly like iOS GlowRing.
                         //
                         // The crisp, solid arc — from 12 o'clock clockwise.
-                        drawArc(
-                            color = color, startAngle = -90f, sweepAngle = sweep, useCenter = false,
-                            topLeft = tl, size = arcSize, style = Stroke(width = stroke, cap = StrokeCap.Round),
-                        )
+                        if (Palette.isLight) {
+                            // Pastel Studio "liquid glass" arc: a light-to-deep diagonal gradient gives the
+                            // stroke body and depth, and a thin white specular line along its outer edge
+                            // reads as a glossy, slightly 3D tube.
+                            val lightTone = Color(
+                                red = color.red + (1f - color.red) * 0.35f,
+                                green = color.green + (1f - color.green) * 0.35f,
+                                blue = color.blue + (1f - color.blue) * 0.35f,
+                                alpha = 1f,
+                            )
+                            val deepTone = Color(red = color.red * 0.8f, green = color.green * 0.8f, blue = color.blue * 0.8f, alpha = 1f)
+                            drawArc(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(lightTone, color, deepTone),
+                                    start = tl,
+                                    end = Offset(tl.x + arcSize.width, tl.y + arcSize.height),
+                                ),
+                                startAngle = -90f, sweepAngle = sweep, useCenter = false,
+                                topLeft = tl, size = arcSize, style = Stroke(width = stroke, cap = StrokeCap.Round),
+                            )
+                            val glint = stroke * 0.22f
+                            drawArc(
+                                color = Color.White.copy(alpha = 0.45f),
+                                startAngle = -90f, sweepAngle = sweep, useCenter = false,
+                                topLeft = Offset(tl.x - glint, tl.y - glint),
+                                size = Size(arcSize.width + glint * 2f, arcSize.height + glint * 2f),
+                                style = Stroke(width = stroke * 0.16f, cap = StrokeCap.Round),
+                            )
+                        } else {
+                            drawArc(
+                                color = color, startAngle = -90f, sweepAngle = sweep, useCenter = false,
+                                topLeft = tl, size = arcSize, style = Stroke(width = stroke, cap = StrokeCap.Round),
+                            )
+                        }
                     }
                 },
         )
